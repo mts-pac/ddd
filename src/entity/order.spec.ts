@@ -1,5 +1,5 @@
 import Order from "./order";
-import OrderItem from "./order_item";
+import OrderItem from "./order-item";
 import Product from "./product";
 
 describe("Order unit  tests", () => {
