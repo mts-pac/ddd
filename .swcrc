@@ -2,12 +2,11 @@
   "jsc": {
     "parser": {
       "syntax": "typescript",
-      "tsx": true
+      "decorators": true
     },
     "transform": {
-      "react": {
-        "runtime": "automatic"
-      }
+      "legacyDecorator": true,
+      "decoratorMetadata": true
     }
   }
 }
