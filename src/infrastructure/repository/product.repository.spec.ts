@@ -2,9 +2,8 @@ import { Sequelize } from "sequelize-typescript";
 import ProductModel from "../db/sequelize/model/product.model";
 import Product from "../../domain/entity/product";
 import ProductRepository from "./product.repository";
-import { where } from "sequelize";
 
-describe("ProductRepository unit test", () => {
+describe("Product repository unit test", () => {
   let sequelize: Sequelize;
 
   beforeEach(async () => {
