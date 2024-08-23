@@ -30,11 +30,19 @@ export default class Order {
     return true;
   }
 
+  get id(): string {
+    return this._id;
+  }
+
   get total(): number {
     return this._total;
   }
 
   get items(): OrderItem[] {
     return this._items;
+  }
+
+  get customerId(): string {
+    return this._customerId;
   }
 }

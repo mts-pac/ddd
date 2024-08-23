@@ -29,5 +29,4 @@ export default class CustomerModel extends Model {
 
   @Column({ allowNull: false })
   declare rewardPoints: number;
-
 }

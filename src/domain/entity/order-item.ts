@@ -46,6 +46,10 @@ export default class OrderItem {
     return true;
   }
 
+  get id(): string {
+    return this._id;
+  }
+
   get price(): number {
     return this._price;
   }
