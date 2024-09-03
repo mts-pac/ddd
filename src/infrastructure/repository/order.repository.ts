@@ -1,81 +1,90 @@
-import Order from "../../domain/entity/order";
-import OrderRepositoryInterface from "../../domain/repository/order-repository.interface";
-import OrderItemModel from "../db/sequelize/model/order-item.model";
-import OrderModel from "../db/sequelize/model/order.model";
+import Order from '../../domain/entity/order'
+import OrderItem from '../../domain/entity/order-item'
+import OrderRepositoryInterface from '../../domain/repository/order-repository.interface'
+import OrderItemModel from '../db/sequelize/model/order-item.model'
+import OrderModel from '../db/sequelize/model/order.model'
 
 export default class OrderRepository implements OrderRepositoryInterface {
+  private toOrderItem = (oi: OrderItemModel, orderId?: string) => {
+    if (orderId) {
+      const entity = new OrderItem(oi.id, oi.name, oi.price, oi.product_id, oi.quantity)
+      entity.orderId = orderId
+      return entity
+    }
+
+    return new OrderItem(oi.id, oi.name, oi.price, oi.product_id, oi.quantity)
+  }
+
   async create(entity: Order): Promise<void> {
-    await OrderModel.create({
-      id: entity.id,
-      customer_id: entity.customerId,
-      total: entity.total,
-      items: entity.items.map((item) => ({
+    await OrderModel.create(
+      {
+        id: entity.id,
+        customer_id: entity.customerId,
+        total: entity.total,
+        items: entity.items.map((item) => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          product_id: item.productId,
+          quantity: item.quantity,
+        })),
+      },
+      {
+        include: [{ model: OrderItemModel }],
+      },
+    )
+  }
+
+  async update(entity: Order): Promise<void> {
+    await OrderModel.update(
+      {
+        id: entity.id,
+        customer_id: entity.customerId,
+        items: entity.items.map((item) => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          product_id: item.productId,
+          quantity: item.quantity,
+        })),
+        total: entity.total,
+      },
+      {
+        where: { id: entity.id },
+      },
+    )
+
+    await OrderItemModel.bulkCreate(
+      entity.items.map((item) => ({
         id: item.id,
+        order_id: entity.id,
         name: item.name,
         price: item.price,
         product_id: item.productId,
         quantity: item.quantity,
       })),
-    }, {
-      include: [{ model: OrderItemModel }]
-    })
-    // await CustomerModel.create({
-    //   id: entity.id,
-    //   name: entity.name,
-    //   street: entity.address.street,
-    //   number: entity.address.number,
-    //   zipcode: entity.address.zip,
-    //   city: entity.address.city,
-    //   active: entity.isActive,
-    //   rewardPoints: entity.rewardPoints,
-    // });
-  }
-
-  async update(entity: Order): Promise<void> {
-    // await CustomerModel.update(
-    //   {
-    //     name: entity.name,
-    //     street: entity.address.street,
-    //     number: entity.address.number,
-    //     zipcode: entity.address.zip,
-    //     city: entity.address.city,
-    //     active: entity.isActive,
-    //     rewardPoints: entity.rewardPoints,
-    //   },
-    //   {
-    //     where: { id: entity.id },
-    //   }
-    // );
+      {
+        updateOnDuplicate: ['name', 'price', 'quantity'], // Campos que serão atualizados caso o registro já exista
+      },
+    )
   }
 
   async delete(id: string): Promise<void> {
-    // await CustomerModel.destroy({ where: { id } });
+    await OrderModel.destroy({ where: { id } })
   }
 
   async find(id: string): Promise<Order> {
-    // const model = await CustomerModel.findOne({ where: { id } });
-    // const customer = new Customer(model.id, model.name);
-    // customer.address = new Address(model.street, model.number, model.city,  model.zipcode);
-    // if (model.active) {
-    //   customer.activate();
-    // }
-
-    // return customer;
-    return null
+    const model = await OrderModel.findOne({ where: { id }, include: ['items'] })
+    const items = model.items.map((el) => this.toOrderItem(el, model.id))
+    return new Order(model.id, model.customer_id, items)
   }
 
   async findAll(): Promise<Order[]> {
-    // const models = await CustomerModel.findAll();
-    // return models.map((model) => {
-    //   const customer = new Customer(model.id, model.name);
-    //   customer.address = new Address(model.street, model.number, model.city, model.zipcode);
-    //   if (model.active) {
-    //     customer.activate();
-    //   }
+    const models = await OrderModel.findAll({ include: ['items'] })
 
-    //   return customer;
-    // });
-
-    return []
+    return models.map((model) => {
+      const items = model.items.map((el) => this.toOrderItem(el, model.id))
+      return new Order(model.id, model.customer_id, items)
+    })
   }
 }
