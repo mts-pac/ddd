@@ -1,54 +1,54 @@
 export default class Product {
-  private _id: string;
-  private _name: string;
-  private _price: number;
+  private _id: string
+  private _name: string
+  private _price: number
 
   constructor(id: string, name: string, price: number) {
-    this._id = id;
-    this._name = name;
-    this._price = price;
-    this.validate();
+    this._id = id
+    this._name = name
+    this._price = price
+    this.validate()
   }
 
   validate() {
     if (!this._id) {
-      throw new Error("Id is required");
+      throw new Error('Id is required')
     }
 
     if (!this._name) {
-      throw new Error("Name is required");
+      throw new Error('Name is required')
     }
 
     if (!this._price) {
-      throw new Error("Price is required");
+      throw new Error('Price is required')
     }
 
     if (this._price < 0) {
-      throw new Error("Price must be greater than zero");
+      throw new Error('Price must be greater than zero')
     }
 
-    return true;
+    return true
   }
 
   get id(): string {
-    return this._id;
+    return this._id
   }
 
   get name(): string {
-    return this._name;
+    return this._name
   }
 
   get price(): number {
-    return this._price;
+    return this._price
   }
 
   set name(name: string) {
-    this._name = name;
-    this.validate();
+    this._name = name
+    this.validate()
   }
 
   set price(price: number) {
-    this._price = price;
-    this.validate();
+    this._price = price
+    this.validate()
   }
 }

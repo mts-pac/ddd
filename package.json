@@ -20,7 +20,7 @@
   "scripts": {
     "test:tsc": "tsc --noEmit",
     "test:jest": "jest",
-    "test": "run-s test:tsc test:jest",
+    "test": "run-s test:tsc test:jest lint",
     "lint:eslint": "eslint .",
     "lint:prettier": "prettier --check .",
     "lintfix:eslint": "eslint . --fix",
