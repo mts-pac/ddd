@@ -25,7 +25,7 @@ describe('Customer repository unit test', () => {
 
   it('should create a customer', async () => {
     const repo = new CustomerRepository()
-    const customer = new Customer('1', 'Customer 1')
+    const customer = Customer.create('1', 'Customer 1')
     customer.address = new Address('Street 1', 1, 'City 1', '12345')
     await repo.create(customer)
 
@@ -44,7 +44,7 @@ describe('Customer repository unit test', () => {
 
   it('should update a customer', async () => {
     const repo = new CustomerRepository()
-    const customer = new Customer('1', 'Customer 1')
+    const customer = Customer.create('1', 'Customer 1')
     customer.address = new Address('Street 1', 1, 'City 1', '12345')
     await repo.create(customer)
 
@@ -68,7 +68,7 @@ describe('Customer repository unit test', () => {
 
   it('should delete a customer', async () => {
     const repo = new CustomerRepository()
-    const customer = new Customer('1', 'Customer 1')
+    const customer = Customer.create('1', 'Customer 1')
     customer.address = new Address('Street 1', 1, 'City 1', '12345')
     await repo.create(customer)
 
@@ -80,7 +80,7 @@ describe('Customer repository unit test', () => {
 
   it('should find a customer', async () => {
     const repo = new CustomerRepository()
-    const customer = new Customer('1', 'Customer 1')
+    const customer = Customer.create('1', 'Customer 1')
     customer.address = new Address('Street 1', 1, 'City 1', '12345')
     await repo.create(customer)
 
@@ -101,15 +101,39 @@ describe('Customer repository unit test', () => {
 
   it('should find all customers', async () => {
     const repo = new CustomerRepository()
-    const c1 = new Customer('1', 'Customer 1')
+    const c1 = Customer.create('1', 'Customer 1')
     c1.address = new Address('Street 1', 1, 'City 1', '12345')
-    const c2 = new Customer('2', 'Customer 2')
+    const c2 =  Customer.create('2', 'Customer 2')
     c2.address = new Address('Street 2', 2, 'City 2', '54321')
 
     await repo.create(c1)
     await repo.create(c2)
 
+    const modelC1 = await CustomerModel.findOne({ where: { id: '1' } })
+    const modelC2 = await CustomerModel.findOne({ where: { id: '2' } })
+
     const founds = await repo.findAll()
-    expect(founds).toEqual([c1, c2])
+    expect(founds.length).toBe(2)
+    
+    expect(modelC1.toJSON()).toStrictEqual({
+      id: founds[0].id,
+      name: founds[0].name,
+      street: founds[0].address.street,
+      number: founds[0].address.number,
+      zipcode: founds[0].address.zip,
+      city: founds[0].address.city,
+      active: founds[0].isActive,
+      rewardPoints: founds[0].rewardPoints,
+    })
+    expect(modelC2.toJSON()).toStrictEqual({
+      id: founds[1].id,
+      name: founds[1].name,
+      street: founds[1].address.street,
+      number: founds[1].address.number,
+      zipcode: founds[1].address.zip,
+      city: founds[1].address.city,
+      active: founds[1].isActive,
+      rewardPoints: founds[1].rewardPoints,
+    })
   })
 })

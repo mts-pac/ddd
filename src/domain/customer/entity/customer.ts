@@ -1,17 +1,55 @@
+import { AgreggateRoot } from '../../@shared/entity/aggregate-root'
+import CustomerAddressChangedEvent from '../event/customer-address-changed.event'
+import CustomerCreatedEvent from '../event/customer-created.event'
 import Address from './address'
 
-export default class Customer {
+export default class Customer extends AgreggateRoot {
   private _id: string
   private _name: string
   private _address!: Address
   private _active: boolean = false
   private _rewardPoints: number = 0
 
-  constructor(id: string, name: string) {
+  private constructor(
+    id: string,
+    name: string,
+    address?: Address,
+    active?: boolean,
+    rewardPoints?: number,
+  ) {
+    super()
     this._id = id
     this._name = name
 
-    this.validate()
+    if (address) {
+      this._address = address
+    }
+
+    if (active) {
+      this._active = active
+    }
+
+    if (rewardPoints) {
+      this._rewardPoints = rewardPoints
+    }
+  }
+
+  public static create(id: string, name: string) {
+    const customer = new Customer(id, name)
+    customer.validate()
+    customer.addEvent(new CustomerCreatedEvent({ id, name }))
+    return customer
+  }
+
+  public static createWithoutValidate(
+    id: string,
+    name: string,
+    address: Address,
+    active: boolean,
+    rewardPoints: number,
+  ) {
+    const customer = new Customer(id, name, address, active, rewardPoints)
+    return customer
   }
 
   validate() {
@@ -52,7 +90,15 @@ export default class Customer {
   }
 
   set address(address: Address) {
+    const oldAddress = this._address
     this._address = address
+    this.addEvent(
+      new CustomerAddressChangedEvent({
+        id: this._id,
+        address: oldAddress ? oldAddress.toString() : undefined,
+        newAddress: address.toString(),
+      }),
+    )
   }
 
   get address(): Address {

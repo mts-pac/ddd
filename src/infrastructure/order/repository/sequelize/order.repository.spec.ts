@@ -33,7 +33,7 @@ describe('Order repository unit test', () => {
 
   const createCustomer = async () => {
     const repo = new CustomerRepository()
-    const customer = new Customer('1', 'Customer 1')
+    const customer = Customer.create('1', 'Customer 1')
     const address = new Address('Street 1', 1, 'City 1', 'Zipcode 1')
     customer.address = address
 

@@ -7,4 +7,5 @@ type EventDispatcherInterface = {
   unregister(eventName: string, handler: EventHandlerInterface): void
   unregisterAll(): void
 }
+
 export default EventDispatcherInterface

@@ -54,5 +54,6 @@ describe('Domain Event Dispatcher Tests', () => {
     dispatcher.notify(productCreatedEvent)
 
     expect(spyEventHandler).toHaveBeenCalled()
+    expect(spyEventHandler).toHaveBeenCalledTimes(1)
   })
 })
