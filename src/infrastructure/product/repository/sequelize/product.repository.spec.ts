@@ -82,10 +82,12 @@ describe('Product repository unit test', () => {
     const p1 = new Product('1', 'Product 1', 1000)
     const p2 = new Product('2', 'Product 2', 2000)
 
+    p1.pullEvents()
+    p2.pullEvents()
     await repo.create(p1)
     await repo.create(p2)
     const founds = await repo.findAll()
-
+    founds.forEach((f) => f.pullEvents()) // to avoid jest open handle error
     expect(founds).toEqual([p1, p2])
   })
 })

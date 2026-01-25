@@ -1,11 +1,11 @@
-import Customer from '../../customer/entity/customer'
+import CustomerFactory from '../../customer/factory/customer.factory'
 import Order from '../entity/order'
 import OrderItem from '../entity/order-item'
 import OrderService from './order.service'
 
 describe('Order service unit tests', () => {
   it('should place an order', () => {
-    const customer = Customer.create('1', 'John Doe')
+    const customer = CustomerFactory.create('John Doe')
     const book = new OrderItem('1', 'Book', 10, '1', 1)
 
     const order = OrderService.place(customer, [book])

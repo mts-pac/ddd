@@ -1,24 +1,25 @@
-import Address from './address'
+import CustomerFactory from '../factory/customer.factory'
+import AddressFactory from '../factory/address.factory'
 import Customer from './customer'
 
 describe('Customer unit  tests', () => {
   it('should throw error when id is empty', () => {
-    expect(() => Customer.create('', 'John Doe')).toThrow('Id is required')
+    expect(() => new Customer(null, 'John Doe')).toThrow('Id is required')
   })
 
   it('should throw error when name is empty', () => {
-    expect(() => Customer.create('123', '')).toThrow('Name is required')
+    expect(() => CustomerFactory.create(null)).toThrow('Name is required')
   })
 
   it('should throw error when address is undefined', () => {
-    expect(() => Customer.create('123', 'John Doe').activate()).toThrow(
+    expect(() => CustomerFactory.create('John Doe').activate()).toThrow(
       'Address is mandatory to activate a customer',
     )
   })
 
   it('should change name', () => {
     // Arrange
-    const customer = Customer.create('123', 'John Doe')
+    const customer = CustomerFactory.create('John Doe')
 
     // Act
     customer.name = 'Jane Doe'
@@ -29,9 +30,9 @@ describe('Customer unit  tests', () => {
 
   it('should activate customer', () => {
     // Arrange
-    const customer = Customer.create('123', 'John Doe')
-    const addres = new Address('Main St', 123, 'Springfield', '12345-123')
-    customer.address = addres
+    const customer = CustomerFactory.create('John Doe')
+    const address = AddressFactory.create('Main Street', 123, 'Springfield', '12345-123')
+    customer.address = address
 
     // Act
     customer.activate()
@@ -42,7 +43,7 @@ describe('Customer unit  tests', () => {
 
   it('should deactivate customer', () => {
     // Arrange
-    const customer = Customer.create('123', 'John Doe')
+    const customer = CustomerFactory.create('John Doe')
 
     // Act
     customer.deactivate()
@@ -52,7 +53,7 @@ describe('Customer unit  tests', () => {
   })
 
   it('should add reward points', () => {
-    const customer = Customer.create('123', 'John Doe')
+    const customer = CustomerFactory.create('John Doe')
     expect(customer.rewardPoints).toBe(0)
 
     customer.addRewardPoints(10)

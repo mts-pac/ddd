@@ -1,33 +1,28 @@
+import { AgreggateRoot } from '../../@shared/entity/aggregate-root'
+import NotificationError from '../../@shared/notification/notification.error'
+import OrderValidatorFactory from '../factory/order.validator.factory'
 import OrderItem from './order-item'
 
-export default class Order {
+export default class Order extends AgreggateRoot {
   private _id: string
   private _customerId: string
   private _items: OrderItem[] = []
   private _total: number = 0
 
-  constructor(id: string, customerId: string, items: OrderItem[]) {
+  public constructor(id: string, customerId: string, items: OrderItem[]) {
+    super()
     this._id = id
     this._customerId = customerId
     this._items = items
     this._total = this._items.reduce((acc, item) => acc + item.total, 0)
     this.validate()
+    if (this.notification.hasErrors()) {
+      throw new NotificationError(this.notification.getErrors())
+    }
   }
 
   validate() {
-    if (!this._id) {
-      throw new Error('Id is required')
-    }
-
-    if (!this._customerId) {
-      throw new Error('CustomerId is required')
-    }
-
-    if (this._items.length === 0) {
-      throw new Error('Items are required')
-    }
-
-    return true
+    OrderValidatorFactory.create().validate(this)
   }
 
   get id(): string {

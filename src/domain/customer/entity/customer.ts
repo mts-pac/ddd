@@ -1,7 +1,9 @@
 import { AgreggateRoot } from '../../@shared/entity/aggregate-root'
+import Address from './address'
 import CustomerAddressChangedEvent from '../event/customer-address-changed.event'
 import CustomerCreatedEvent from '../event/customer-created.event'
-import Address from './address'
+import CustomerValidatorFactory from '../factory/customer.validator.factory'
+import NotificationError from '../../@shared/notification/notification.error'
 
 export default class Customer extends AgreggateRoot {
   private _id: string
@@ -10,7 +12,7 @@ export default class Customer extends AgreggateRoot {
   private _active: boolean = false
   private _rewardPoints: number = 0
 
-  private constructor(
+  public constructor(
     id: string,
     name: string,
     address?: Address,
@@ -32,13 +34,12 @@ export default class Customer extends AgreggateRoot {
     if (rewardPoints) {
       this._rewardPoints = rewardPoints
     }
-  }
 
-  public static create(id: string, name: string) {
-    const customer = new Customer(id, name)
-    customer.validate()
-    customer.addEvent(new CustomerCreatedEvent({ id, name }))
-    return customer
+    this.validate()
+    if (this.notification.hasErrors()) {
+      throw new NotificationError(this.notification.getErrors())
+    }
+    this.addEvent(new CustomerCreatedEvent({ id, name }))
   }
 
   public static createWithoutValidate(
@@ -53,15 +54,7 @@ export default class Customer extends AgreggateRoot {
   }
 
   validate() {
-    if (!this._name || this._name.length === 0) {
-      throw new Error('Name is required')
-    }
-
-    if (!this._id) {
-      throw new Error('Id is required')
-    }
-
-    return true
+    CustomerValidatorFactory.create().validate(this)
   }
 
   activate(): void {

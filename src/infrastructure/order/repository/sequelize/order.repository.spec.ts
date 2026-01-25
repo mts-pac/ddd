@@ -8,9 +8,9 @@ import OrderItem from '../../../../domain/checkout/entity/order-item'
 import Order from '../../../../domain/checkout/entity/order'
 import OrderRepository from './order.repository'
 import Address from '../../../../domain/customer/entity/address'
-import Customer from '../../../../domain/customer/entity/customer'
 import ProductModel from '../../../product/repository/sequelize/product.model'
 import OrderModel from './order.model'
+import CustomerFactory from '../../../../domain/customer/factory/customer.factory'
 
 describe('Order repository unit test', () => {
   let sequelize: Sequelize
@@ -33,7 +33,7 @@ describe('Order repository unit test', () => {
 
   const createCustomer = async () => {
     const repo = new CustomerRepository()
-    const customer = Customer.create('1', 'Customer 1')
+    const customer = CustomerFactory.create('Customer 1')
     const address = new Address('Street 1', 1, 'City 1', 'Zipcode 1')
     customer.address = address
 

@@ -1,4 +1,8 @@
-export default class OrderItem {
+import { Entity } from '../../@shared/entity/entity'
+import NotificationError from '../../@shared/notification/notification.error'
+import OrderItemValidatorFactory from '../factory/order-item.validator.factory'
+
+export default class OrderItem extends Entity {
   private _id: string
   private _productId: string
   private _name: string
@@ -7,7 +11,14 @@ export default class OrderItem {
   private _total: number
   private _orderId: string
 
-  constructor(id: string, name: string, price: number, productId: string, quantity: number = 1) {
+  public constructor(
+    id: string,
+    name: string,
+    price: number,
+    productId: string,
+    quantity: number = 1,
+  ) {
+    super()
     this._id = id
     this._name = name
     this._price = price
@@ -15,30 +26,13 @@ export default class OrderItem {
     this._productId = productId
     this._total = this.price * this.quantity
     this.validate()
+    if (this.notification.hasErrors()) {
+      throw new NotificationError(this.notification.getErrors())
+    }
   }
 
   validate() {
-    if (!this._id) {
-      throw new Error('Id is required')
-    }
-
-    if (!this._name) {
-      throw new Error('Name is required')
-    }
-
-    if (!this._price) {
-      throw new Error('Price is required')
-    }
-
-    if (this._quantity < 0) {
-      throw new Error('Quantity must be greater than zero')
-    }
-
-    if (this._price < 0) {
-      throw new Error('Price must be greater than zero')
-    }
-
-    return true
+    OrderItemValidatorFactory.create().validate(this)
   }
 
   set orderId(orderId: string) {

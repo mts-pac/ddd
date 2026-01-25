@@ -1,8 +1,8 @@
 import { Sequelize } from 'sequelize-typescript'
 import CustomerRepository from './customer.repository'
 import CustomerModel from './customer.model'
-import Customer from '../../../../domain/customer/entity/customer'
 import Address from '../../../../domain/customer/entity/address'
+import CustomerFactory from '../../../../domain/customer/factory/customer.factory'
 
 describe('Customer repository unit test', () => {
   let sequelize: Sequelize
@@ -25,13 +25,13 @@ describe('Customer repository unit test', () => {
 
   it('should create a customer', async () => {
     const repo = new CustomerRepository()
-    const customer = Customer.create('1', 'Customer 1')
+    const customer = CustomerFactory.create('Customer 1')
     customer.address = new Address('Street 1', 1, 'City 1', '12345')
     await repo.create(customer)
 
-    const model = await CustomerModel.findOne({ where: { id: '1' } })
+    const model = await CustomerModel.findOne({ where: { id: customer.id } })
     expect(model.toJSON()).toStrictEqual({
-      id: '1',
+      id: customer.id,
       name: 'Customer 1',
       street: 'Street 1',
       number: 1,
@@ -44,7 +44,7 @@ describe('Customer repository unit test', () => {
 
   it('should update a customer', async () => {
     const repo = new CustomerRepository()
-    const customer = Customer.create('1', 'Customer 1')
+    const customer = CustomerFactory.create('Customer 1')
     customer.address = new Address('Street 1', 1, 'City 1', '12345')
     await repo.create(customer)
 
@@ -53,9 +53,9 @@ describe('Customer repository unit test', () => {
     customer.activate()
     await repo.update(customer)
 
-    const model = await CustomerModel.findOne({ where: { id: '1' } })
+    const model = await CustomerModel.findOne({ where: { id: customer.id } })
     expect(model.toJSON()).toStrictEqual({
-      id: '1',
+      id: customer.id,
       name: 'Customer 2',
       street: 'Street 2',
       number: 2,
@@ -68,24 +68,24 @@ describe('Customer repository unit test', () => {
 
   it('should delete a customer', async () => {
     const repo = new CustomerRepository()
-    const customer = Customer.create('1', 'Customer 1')
+    const customer = CustomerFactory.create('Customer 1')
     customer.address = new Address('Street 1', 1, 'City 1', '12345')
     await repo.create(customer)
 
-    await repo.delete('1')
+    await repo.delete(customer.id)
 
-    const model = await CustomerModel.findOne({ where: { id: '1' } })
+    const model = await CustomerModel.findOne({ where: { id: customer.id } })
     expect(model).toBeNull()
   })
 
   it('should find a customer', async () => {
     const repo = new CustomerRepository()
-    const customer = Customer.create('1', 'Customer 1')
+    const customer = CustomerFactory.create('Customer 1')
     customer.address = new Address('Street 1', 1, 'City 1', '12345')
     await repo.create(customer)
 
-    const model = await CustomerModel.findOne({ where: { id: '1' } })
-    const found = await repo.find('1')
+    const model = await CustomerModel.findOne({ where: { id: customer.id } })
+    const found = await repo.find(customer.id)
 
     expect(model.toJSON()).toStrictEqual({
       id: found.id,
@@ -101,20 +101,20 @@ describe('Customer repository unit test', () => {
 
   it('should find all customers', async () => {
     const repo = new CustomerRepository()
-    const c1 = Customer.create('1', 'Customer 1')
+    const c1 = CustomerFactory.create('Customer 1')
     c1.address = new Address('Street 1', 1, 'City 1', '12345')
-    const c2 =  Customer.create('2', 'Customer 2')
+    const c2 = CustomerFactory.create('Customer 2')
     c2.address = new Address('Street 2', 2, 'City 2', '54321')
 
     await repo.create(c1)
     await repo.create(c2)
 
-    const modelC1 = await CustomerModel.findOne({ where: { id: '1' } })
-    const modelC2 = await CustomerModel.findOne({ where: { id: '2' } })
+    const modelC1 = await CustomerModel.findOne({ where: { id: c1.id } })
+    const modelC2 = await CustomerModel.findOne({ where: { id: c2.id } })
 
     const founds = await repo.findAll()
     expect(founds.length).toBe(2)
-    
+
     expect(modelC1.toJSON()).toStrictEqual({
       id: founds[0].id,
       name: founds[0].name,
