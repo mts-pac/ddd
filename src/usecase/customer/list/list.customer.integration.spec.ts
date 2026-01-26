@@ -43,7 +43,7 @@ describe('Integration test for listing customer use case', () => {
 
     const listUseCase = new ListCustomerUseCase(repository)
 
-    const output = await listUseCase.execute({})
+    const output = await listUseCase.execute()
 
     expect(output.customers.length).toBe(2)
     expect(output.customers[0].name).toBe(customer1.name)

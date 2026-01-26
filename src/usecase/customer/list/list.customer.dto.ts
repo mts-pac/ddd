@@ -1,5 +1,3 @@
-export interface InputListCustomerDto {}
-
 type Customer = {
   id: string
   name: string
