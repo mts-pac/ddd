@@ -31,9 +31,8 @@ describe('Find Product Use Case Integration Tests', () => {
     const createProductUseCase = new CreateProductUseCase(productRepository)
     const findProductUseCase = new FindProductUseCase(productRepository)
 
-
     const { id } = await createProductUseCase.execute(product)
-    
+
     const output = await findProductUseCase.execute({ id })
 
     expect(output).toEqual({

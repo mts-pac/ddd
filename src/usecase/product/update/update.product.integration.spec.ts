@@ -32,7 +32,7 @@ describe('Integration test for product update use case', () => {
     const createProductUseCase = new CreateProductUseCase(productRepository)
     const productUpdateUseCase = new UpdateProductUseCase(productRepository)
 
-    const { id } =  await createProductUseCase.execute(product)
+    const { id } = await createProductUseCase.execute(product)
     const output = await productUpdateUseCase.execute({
       id,
       name: input.name,
