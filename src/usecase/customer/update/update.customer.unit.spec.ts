@@ -1,6 +1,7 @@
 import AddressFactory from '../../../domain/customer/factory/address.factory'
 import CustomerFactory from '../../../domain/customer/factory/customer.factory'
 import UpdateCustomerUseCase from './update.customer.usecase'
+
 const customer = CustomerFactory.createWithAddress(
   'John',
   AddressFactory.create('Street', 123, 'Zip', 'City'),

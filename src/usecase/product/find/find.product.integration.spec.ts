@@ -1,11 +1,13 @@
 import { Sequelize } from 'sequelize-typescript'
-import ProductFactory from '../../../domain/product/factory/product.factory'
 import ProductModel from '../../../infrastructure/product/repository/sequelize/product.model'
 import FindProductUseCase from './find.product.usecase'
 import ProductRepository from '../../../infrastructure/product/repository/sequelize/product.repository'
 import CreateProductUseCase from '../create/create.product.usecase'
 
-const product = ProductFactory.create('Product 1', 100)
+const product = {
+  name: 'Product 1',
+  price: 100,
+}
 
 describe('Find Product Use Case Integration Tests', () => {
   let sequelize: Sequelize

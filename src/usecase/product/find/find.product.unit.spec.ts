@@ -1,7 +1,11 @@
-import ProductFactory from '../../../domain/product/factory/product.factory'
+import CreateProductUseCase from '../create/create.product.usecase'
 import FindProductUseCase from './find.product.usecase'
 
-const product = ProductFactory.create('Product 1', 200)
+const product = {
+  name: 'Product 1',
+  price: 100,
+}
+
 const MockRepository = () => {
   return {
     create: jest.fn(),
@@ -15,16 +19,13 @@ const MockRepository = () => {
 describe('Find Product Use Case Unit Tests', () => {
   it('should find a product', async () => {
     const productRepository = MockRepository()
+    const createProductUseCase = new CreateProductUseCase(productRepository)
     const findProductUseCase = new FindProductUseCase(productRepository)
 
-    const input = {
-      id: product.id,
-    }
-
-    const output = await findProductUseCase.execute(input)
+    const { id } = await createProductUseCase.execute(product)
+    const output = await findProductUseCase.execute({ id })
 
     expect(output).toEqual({
-      id: product.id,
       name: product.name,
       price: product.price,
     })

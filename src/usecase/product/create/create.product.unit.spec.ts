@@ -28,4 +28,22 @@ describe('Create Product Use Case Unit Tests', () => {
       price: input.price,
     })
   })
+
+  it('should throw an error when name is missing', async () => {
+    const productRepository = MockRepository()
+    const createProductUseCase = new CreateProductUseCase(productRepository)
+    input.name = ''
+
+    await expect(createProductUseCase.execute(input)).rejects.toThrow('Name is required')
+  })
+
+  it('should throw an error when price is less than zero', async () => {
+    const productRepository = MockRepository()
+    const createProductUseCase = new CreateProductUseCase(productRepository)
+    input.price = -1
+
+    await expect(createProductUseCase.execute(input)).rejects.toThrow(
+      'Price must be greater than zero',
+    )
+  })
 })
