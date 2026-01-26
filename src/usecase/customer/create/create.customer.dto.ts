@@ -1,4 +1,4 @@
-export interface InputCreateCustomerDto {
+export type InputCreateCustomerDto = {
   name: string
   address: {
     street: string
@@ -8,7 +8,7 @@ export interface InputCreateCustomerDto {
   }
 }
 
-export interface OutputCreateCustomerDto {
+export type OutputCreateCustomerDto = {
   id: string
   name: string
   address: {

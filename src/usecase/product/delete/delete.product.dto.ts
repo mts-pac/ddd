@@ -1,3 +1,3 @@
-export interface InputDeleteProductDto {
+export type InputDeleteProductDto = {
   id: string
 }

@@ -1,9 +1,9 @@
-export interface InputCreateProductDto {
+export type InputCreateProductDto = {
   name: string
   price: number
 }
 
-export interface OutputCreateProductDto {
+export type OutputCreateProductDto = {
   id: string
   name: string
   price: number

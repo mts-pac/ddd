@@ -1,4 +1,4 @@
-export interface InputUpdateCustomerDto {
+export type InputUpdateCustomerDto = {
   id: string
   name: string
   address: {
@@ -9,7 +9,7 @@ export interface InputUpdateCustomerDto {
   }
 }
 
-export interface OutputUpdateCustomerDto {
+export type OutputUpdateCustomerDto = {
   id: string
   name: string
   address: {

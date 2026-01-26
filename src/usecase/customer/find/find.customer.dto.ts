@@ -1,8 +1,8 @@
-export interface InputFindCustomerDto {
+export type InputFindCustomerDto = {
   id: string
 }
 
-export interface OutputFindCustomerDto {
+export type OutputFindCustomerDto = {
   id: string
   name: string
   address: {

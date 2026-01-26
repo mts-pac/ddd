@@ -1,8 +1,8 @@
-export interface InputFindProductDto {
+export type InputFindProductDto = {
   id: string
 }
 
-export interface OutputFindProductDto {
+export type OutputFindProductDto = {
   id: string
   name: string
   price: number

@@ -9,6 +9,6 @@ type Customer = {
   }
 }
 
-export interface OutputListCustomerDto {
+export type OutputListCustomerDto = {
   customers: Customer[]
 }

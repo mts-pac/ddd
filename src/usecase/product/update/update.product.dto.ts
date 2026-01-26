@@ -1,10 +1,10 @@
-export interface InputUpdateProductDto {
+export type InputUpdateProductDto = {
   id: string
   name: string
   price: number
 }
 
-export interface OutputUpdateProductDto {
+export type OutputUpdateProductDto = {
   id: string
   name: string
   price: number

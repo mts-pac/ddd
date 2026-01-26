@@ -1,3 +1,5 @@
-export default interface ValidatorInterface<T> {
+type ValidatorInterface<T> = {
   validate(entity: T): void
 }
+
+export default ValidatorInterface
