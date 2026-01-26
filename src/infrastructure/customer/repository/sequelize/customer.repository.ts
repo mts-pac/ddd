@@ -40,6 +40,9 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
 
   async find(id: string): Promise<Customer> {
     const model = await CustomerModel.findOne({ where: { id } })
+    if (!model) {
+      return null
+    }
     const address = new Address(model.street, model.number, model.city, model.zipcode)
     const customer = Customer.createWithoutValidate(
       model.id,
