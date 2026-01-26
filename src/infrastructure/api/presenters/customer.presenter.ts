@@ -1,5 +1,6 @@
 import { toXML } from 'jstoxml'
 import { OutputListCustomerDto } from '../../../usecase/customer/list/list.customer.dto'
+import { OutputFindCustomerDto } from '../../../usecase/customer/find/find.customer.dto'
 
 export default class CustomerPresenter {
   static listXML(data: OutputListCustomerDto): string {
@@ -23,6 +24,31 @@ export default class CustomerPresenter {
               city: customer.address.city,
             },
           })),
+        },
+      },
+      xmlOption,
+    )
+  }
+
+  static singleXML(data: OutputFindCustomerDto): string {
+    const xmlOption = {
+      header: true,
+      indent: '  ',
+      newline: '\n',
+      allowEmpty: true,
+    }
+
+    return toXML(
+      {
+        customer: {
+          id: data.id,
+          name: data.name,
+          address: {
+            street: data.address.street,
+            number: data.address.number,
+            zip: data.address.zip,
+            city: data.address.city,
+          },
         },
       },
       xmlOption,

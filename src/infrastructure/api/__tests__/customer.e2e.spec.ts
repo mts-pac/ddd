@@ -96,4 +96,126 @@ describe('E2E test for customer', () => {
     expect(listResponseXML.text).toContain(`<street>Street 2</street>`)
     expect(listResponseXML.text).toContain(`</customers>`)
   })
+
+  it('should find a customer', async () => {
+    const response = await request(app)
+      .post('/customer')
+      .send({
+        name: 'John',
+        address: {
+          street: 'Street',
+          city: 'City',
+          number: 123,
+          zip: '12345',
+        },
+      })
+    expect(response.status).toBe(200)
+    const customerId = response.body.id
+
+    const findResponse = await request(app).get(`/customer/${customerId}`).send()
+
+    expect(findResponse.status).toBe(200)
+    expect(findResponse.body.name).toBe('John')
+    expect(findResponse.body.address.street).toBe('Street')
+
+    const findResponseXML = await request(app)
+      .get(`/customer/${customerId}`)
+      .set('Accept', 'application/xml')
+      .send()
+
+    expect(findResponseXML.status).toBe(200)
+    expect(findResponseXML.text).toContain(`<?xml version="1.0" encoding="UTF-8"?>`)
+    expect(findResponseXML.text).toContain(`<customer>`)
+    expect(findResponseXML.text).toContain(`<name>John</name>`)
+    expect(findResponseXML.text).toContain(`<address>`)
+    expect(findResponseXML.text).toContain(`<street>Street</street>`)
+    expect(findResponseXML.text).toContain(`<city>City</city>`)
+    expect(findResponseXML.text).toContain(`<number>123</number>`)
+    expect(findResponseXML.text).toContain(`<zip>12345</zip>`)
+    expect(findResponseXML.text).toContain(`</address>`)
+    expect(findResponseXML.text).toContain(`</customer>`)
+  })
+
+  it('should update a customer', async () => {
+    const response = await request(app)
+      .post('/customer')
+      .send({
+        name: 'John',
+        address: {
+          street: 'Street',
+          city: 'City',
+          number: 123,
+          zip: '12345',
+        },
+      })
+    expect(response.status).toBe(200)
+    const customerId = response.body.id
+
+    const updateResponse = await request(app)
+      .put(`/customer/${customerId}`)
+      .set('Accept', 'application/xml')
+      .send({
+        name: 'John Updated',
+        address: {
+          street: 'Street Updated',
+          city: 'City Updated',
+          number: 321,
+          zip: '54321',
+        },
+      })
+
+    expect(updateResponse.status).toBe(200)
+    expect(updateResponse.text).toContain(`<?xml version="1.0" encoding="UTF-8"?>`)
+    expect(updateResponse.text).toContain(`<customer>`)
+    expect(updateResponse.text).toContain(`<name>John Updated</name>`)
+    expect(updateResponse.text).toContain(`<address>`)
+    expect(updateResponse.text).toContain(`<street>Street Updated</street>`)
+    expect(updateResponse.text).toContain(`<city>City Updated</city>`)
+    expect(updateResponse.text).toContain(`<number>321</number>`)
+    expect(updateResponse.text).toContain(`<zip>54321</zip>`)
+    expect(updateResponse.text).toContain(`</address>`)
+    expect(updateResponse.text).toContain(`</customer>`)
+  })
+
+  it('should not update a customer', async () => {
+    const response = await request(app)
+      .post('/customer')
+      .send({
+        name: 'John',
+        address: {
+          street: 'Street',
+          city: 'City',
+          number: 123,
+          zip: '12345',
+        },
+      })
+    expect(response.status).toBe(200)
+    const customerId = response.body.id
+
+    const updateResponse = await request(app).put(`/customer/${customerId}`).send({})
+
+    expect(updateResponse.status).toBe(500)
+  })
+
+  it('should delete a customer', async () => {
+    const response = await request(app)
+      .post('/customer')
+      .send({
+        name: 'John',
+        address: {
+          street: 'Street',
+          city: 'City',
+          number: 123,
+          zip: '12345',
+        },
+      })
+    expect(response.status).toBe(200)
+    const customerId = response.body.id
+
+    const deleteResponse = await request(app).delete(`/customer/${customerId}`).send()
+
+    expect(deleteResponse.status).toBe(204)
+    const findResponse = await request(app).get(`/customer/${customerId}`).send()
+    expect(findResponse.status).toBe(500)
+  })
 })
