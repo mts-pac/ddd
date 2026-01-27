@@ -1,7 +1,7 @@
 import ProductRepositoryInterface from '../../../domain/product/repository/product-repository.interface'
 import { InputDeleteProductDto } from './delete.product.dto'
 
-export default class DeleteCustomerUseCase {
+export default class DeleteProductUseCase {
   private productRepository: ProductRepositoryInterface
 
   constructor(productRepository: ProductRepositoryInterface) {

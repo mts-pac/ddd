@@ -7,9 +7,9 @@ import FindCustomerUseCase from '../../../usecase/customer/find/find.customer.us
 import UpdateCustomerUseCase from '../../../usecase/customer/update/update.customer.usecase'
 import DeleteCustomerUseCase from '../../../usecase/customer/delete/delete.customer.usecase'
 
-export const customerRoute = express.Router()
+export const route = express.Router()
 
-customerRoute.post('/', async (req: Request, res: Response) => {
+route.post('/', async (req: Request, res: Response) => {
   const usecase = new CreateCustomerUseCase(new CustomerRepository())
   try {
     const customerDto = {
@@ -28,7 +28,7 @@ customerRoute.post('/', async (req: Request, res: Response) => {
   }
 })
 
-customerRoute.get('/', async (req: Request, res: Response) => {
+route.get('/', async (req: Request, res: Response) => {
   const usecase = new ListCustomerUseCase(new CustomerRepository())
   const output = await usecase.execute()
 
@@ -38,7 +38,7 @@ customerRoute.get('/', async (req: Request, res: Response) => {
   })
 })
 
-customerRoute.get('/:id', async (req: Request, res: Response) => {
+route.get('/:id', async (req: Request, res: Response) => {
   const usecase = new FindCustomerUseCase(new CustomerRepository())
   try {
     const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id
@@ -53,7 +53,7 @@ customerRoute.get('/:id', async (req: Request, res: Response) => {
   }
 })
 
-customerRoute.put('/:id', async (req: Request, res: Response) => {
+route.put('/:id', async (req: Request, res: Response) => {
   const usecase = new UpdateCustomerUseCase(new CustomerRepository())
   try {
     const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id
@@ -78,7 +78,7 @@ customerRoute.put('/:id', async (req: Request, res: Response) => {
   }
 })
 
-customerRoute.delete('/:id', async (req: Request, res: Response) => {
+route.delete('/:id', async (req: Request, res: Response) => {
   const usecase = new DeleteCustomerUseCase(new CustomerRepository())
   try {
     const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id
